@@ -1,5 +1,5 @@
 #! /bin/bash
-myapp=myapp
+myapp=myservice
 myname=$(echo $0 | sed 's|.*/||')
 mydir=$(dirname $0 | sed 's|/$||')
 
@@ -51,11 +51,11 @@ while [ -n "$1" ]; do
   shift
 done
 
-if [ ! -r $MYAPPJAR ]; then
+if [ ! -r "$MYAPPJAR" ]; then
   echo "Couldn't find the jar file!"
   usage
 fi
 
-cmd="$JAVA -jar $MYAPPJAR $*"
-[ -z "$verbose" ] || echo $cmd
-[ -z "$noop" ] && exec $cmd
+cmd="$JAVA -jar $MYAPPJAR"
+[ -z "$verbose" ] || echo $cmd "$@"
+[ -z "$noop" ] && exec $cmd "$@"

@@ -1,0 +1,39 @@
+MyService-32.exe    is Apache Commons Daemon's procrun's prunsrv.exe renamed.
+MyService-amd64.exe is Apache Commons Daemon's procrun's amd64/prunsrv.exe renamed.
+MyServiceMgr.exe    is Apache Commons Daemon's procrun's prunmgr.exe renamed.
+
+Use MyService-32.exe with 32-bit Java and MyService-amd64.exe with 64-bit Java.
+
+---
+
+Step 1: Plan For Installation
+=============================
+
+Decide where things will get installed and logged.
+
+  MYSERVICEHOME is the path to the directory where the "myservice" software gets installed.
+  STDOUTLOGFILE is the path to the file where stdout messages will be logged.
+                This file will get overwritten each time the service starts.
+  STDERRLOGFILE is the path to the file where stderr messages will be logged.
+                This file will get overwritten each time the service starts.
+  DAEMONLOGFILE is ???
+
+Step 2: Install the Service
+===========================
+
+Run the command from an administrator terminal (this example assumes Cygwin bash shell):
+
+  MyService-amd64 install --DisplayName="My Service" --Description="Short description of my service." \
+      --Classpath=C:/Users/flast/md/myservice.jar \
+      --StartMode=jvm --StartClass=com.demo.myservice.MyService \
+      --StopMode=jvm --StopClass=com.demo.myservice.MyService \
+      --LogPath=C:/Users/flast/
+
+      --Classpath=$MYSERVICEHOME/bin/myservice.jar \
+      --ServiceUser=someuser --ServicePassword=s3cROT \
+
+  MyService-amd64 install --DisplayName="My Service" --Description="Short description of my service." \
+      --Classpath=C:/Users/flast/md/daemon.jar \
+      --StartMode=jvm --StartClass=com.demo.mydaemon.MyDaemon \
+      --StopMode=jvm --StopClass=com.demo.mydaemon.MyDaemon \
+      --LogPath=C:/Users/flast/
