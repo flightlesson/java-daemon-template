@@ -7,6 +7,7 @@ import org.apache.commons.cli.HelpFormatter;
 import org.apache.commons.cli.Options;
 import org.apache.commons.cli.ParseException;
 import org.apache.log4j.BasicConfigurator;
+import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 import org.apache.log4j.PropertyConfigurator;
 import org.apache.log4j.xml.DOMConfigurator;
@@ -31,6 +32,7 @@ public class MyService implements Runnable {
         OPTIONS = new Options();
         OPTIONS.addOption("h","help",false,"Print this message.");
 	OPTIONS.addOption("v","verbose",false,"Turn on verbose output.");
+        OPTIONS.addOption(null,"debug",false,"force log4j's level to DEBUG");
         OPTIONS.addOption(null,"l4jconfig",true,"Path to the log4j configuration file [./l4j.lcf]");
     }
     
@@ -47,7 +49,7 @@ public class MyService implements Runnable {
                 (new HelpFormatter()).printHelp(USAGE,HEADER,OPTIONS,FOOTER,false);
                 System.exit(1);
             }
-            configureLog4j(cmdline.getOptionValue("l4jconfig","l4j.lcf"));
+            configureLog4j(cmdline.getOptionValue("l4jconfig","l4j.lcf"),cmdline.hasOption("debug"));
         
             application = new MyService(cmdline.hasOption("verbose"));
             application.run();
@@ -66,8 +68,13 @@ public class MyService implements Runnable {
         application.stop();
     }
     
-    static void configureLog4j(String l4jconfig) {
-        if ((new File(l4jconfig)).canRead()) {
+    /**
+     * Configures log4j.
+     * @param l4jconfig null or path to the configuration file.
+     * @param debug if true, forces Level.DEBUG.
+     */
+    static void configureLog4j(String l4jconfig,boolean debug) {
+        if (l4jconfig != null && (new File(l4jconfig)).canRead()) {
             if (l4jconfig.matches(".*\\.xml$")) {
                 DOMConfigurator.configureAndWatch(l4jconfig);
             } else {
@@ -76,6 +83,7 @@ public class MyService implements Runnable {
         } else {
             BasicConfigurator.configure();
         }
+        if (debug) LOGGER.setLevel(Level.DEBUG);
     }
 
     private final boolean verbose;
